@@ -112,7 +112,6 @@ document.getElementById('get-started-button').addEventListener('click', async ()
 });
 
 // Get a reference to the container and camera selection button
-const container = document.getElementById('camera-feed-container');
 const cameraSelectionButton = document.getElementById('switch-camera');
 
 cameraSelectionButton.addEventListener('click', async () => {
