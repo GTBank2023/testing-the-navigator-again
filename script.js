@@ -77,12 +77,13 @@ async function loadCocoSsdModel() {
 document.getElementById('get-started-button').addEventListener('click', async () => {
     try {
         const container = document.getElementById('camera-feed-container');
+        console.log('Enumerating video devices...');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
 
         if (videoDevices.length > 0) {
             // Choose the back camera as the default option
             let videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
-
+            
             if (!videoDevice) {
                 console.error('No video devices found.');
             } else {
@@ -113,9 +114,11 @@ document.getElementById('get-started-button').addEventListener('click', async ()
 
 // Get a reference to the container and camera selection button
 const cameraSelectionButton = document.getElementById('switch-camera');
+console.log('Camera selection button found.');
 
 cameraSelectionButton.addEventListener('click', async () => {
     try {
+        console.log('Enumerating video devices...');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
         const frontCamera = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('front'));
         const backCamera = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
@@ -124,15 +127,19 @@ cameraSelectionButton.addEventListener('click', async () => {
             // Both front and back cameras are available; let the user choose
             const userChoice = window.confirm("Do you want to switch to the front camera?");
             if (userChoice) {
+                console.log('Switching to front camera...');
                 await switchCamera(frontCamera.deviceId);
             } else {
+                console.log('Switching to back camera...');
                 await switchCamera(backCamera.deviceId);
             }
         } else if (frontCamera) {
             // Only a front camera is available, switch to it
+            console.log('Switching to front camera...');
             await switchCamera(frontCamera.deviceId);
         } else if (backCamera) {
             // Only a back camera is available, switch to it
+            console.log('Switching to back camera...');
             await switchCamera(backCamera.deviceId);
         } else {
             console.error('No cameras found.');
@@ -145,6 +152,7 @@ cameraSelectionButton.addEventListener('click', async () => {
 async function switchCamera(deviceId) {
     // Access the selected camera
     try {
+        console.log('Accessing the selected camera...');
         const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId } });
         videoElement.srcObject = stream; // Update the video feed
     } catch (error) {
