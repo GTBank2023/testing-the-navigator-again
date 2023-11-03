@@ -74,7 +74,6 @@ async function loadCocoSsdModel() {
 
 //loadCocoSsdModel(); // Call the async function to load the Coco-SSD model
 
-// Existing code block
 document.getElementById('get-started-button').addEventListener('click', async () => {
     try {
         const container = document.getElementById('camera-feed-container');
@@ -82,27 +81,24 @@ document.getElementById('get-started-button').addEventListener('click', async ()
 
         if (videoDevices.length > 0) {
             // Choose the back camera as the default option
-            let videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
+            let videoDevice = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 
             if (!videoDevice) {
-                console.error('No video devices found.');
-            } else {
-                console.log('Accessing the camera...');
-                let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId } });
-
-                // Create the video element and set its display style to "block"
-               const videoElement = document.createElement('video');
-               videoElement.id = 'video-feed';
-                videoElement.style.width = '100%';
-                videoElement.style.height = '100%';
-                videoElement.style.display = 'block'; // Show the video element
-                videoElement.autoplay = true;
-                container.appendChild(videoElement);
-                videoElement.srcObject = stream;
-                videoElement.parentNode.style.display = 'block'; // Show the container
-                setupCamera();
-                document.getElementById('get-started-button').style.display = 'none'; // Hide the button
+                console.error('No back camera found. Using the default camera.');
+                videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
             }
+
+            console.log('Accessing the camera...');
+            let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId } });
+
+            // Create the video element and set its display style to "block"
+            const videoElement = document.getElementById('video-feed');
+            videoElement.srcObject = stream;
+            videoElement.style.display = 'block'; // Show the video element
+            videoElement.autoplay = true;
+
+            setupCamera();
+            document.getElementById('get-started-button').style.display = 'none'; // Hide the button
         } else {
             console.error('No cameras found.');
         }
@@ -111,45 +107,6 @@ document.getElementById('get-started-button').addEventListener('click', async ()
         // Handle the error, e.g., display an error message to the user
     }
 });
-
-// Function to switch the camera
-async function switchCamera() {
-    const videoDevices = await navigator.mediaDevices.enumerateDevices();
-    let selectedDevice = null;
-
-    for (const device of videoDevices) {
-        if (device.kind === 'videoinput') {
-            // Check for a back camera or any other criteria you prefer
-            if (device.label.toLowerCase().includes('back')) {
-                selectedDevice = device;
-                break;
-            }
-        }
-    }
-
-    if (selectedDevice) {
-        // Access the camera using the selected device
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: selectedDevice.deviceId } });
-        videoElement.srcObject = stream;
-    } else {
-        console.error('No suitable camera found for switching.');
-    }
-}
-
-// Create a button for camera switching
-const cameraSwitchButton = document.createElement('button');
-cameraSwitchButton.textContent = 'Switch Camera'; // You can style this button as needed
-
-// Position the button within the camera video feed
-cameraSwitchButton.style.position = 'absolute';
-cameraSwitchButton.style.top = '10px'; // Adjust the position
-cameraSwitchButton.style.left = '10px'; // Adjust the position
-
-// Add the button to the same container as the video feed
-container.appendChild(cameraSwitchButton);
-
-// Add an event listener for the camera switching button
-cameraSwitchButton.addEventListener('click', switchCamera);
 
 
 function initializeDetectionRules() {
