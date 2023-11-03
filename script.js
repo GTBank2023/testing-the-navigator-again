@@ -88,17 +88,42 @@ document.getElementById('get-started-button').addEventListener('click', async ()
                 videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
             }
 
-            console.log('Accessing the camera...');
-            let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId } });
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            let selectedCamera = null;
 
-            // Create the video element and set its display style to "block"
-            const videoElement = document.getElementById('video-feed');
-            videoElement.srcObject = stream;
-            videoElement.style.display = 'block'; // Show the video element
-            videoElement.autoplay = true;
+            // Iterate through the devices and select the desired camera
+            for (const device of devices) {
+                if (device.kind === 'videoinput') {
+                    if (device.label.toLowerCase().includes('back')) {
+                        // Found a back-facing camera
+                        selectedCamera = device;
+                        break;
+                    }
+                }
+            }
 
-            setupCamera();
-            document.getElementById('get-started-button').style.display = 'none'; // Hide the button
+            if (selectedCamera) {
+                const constraints = {
+                    audio: false,
+                    video: {
+                        deviceId: { exact: selectedCamera.deviceId },
+                        width: { min: 640, ideal: 1280, max: 1920 },
+                        height: { min: 480, ideal: 720, max: 1080 },
+                        facingMode: 'environment',
+                    }
+                };
+
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                // Create the video element and set its display style to "block"
+                const videoElement = document.getElementById('video-feed');
+                videoElement.srcObject = stream;
+                videoElement.style.display = 'block'; // Show the video element
+                videoElement.autoplay = true;
+                setupCamera();
+                document.getElementById('get-started-button').style.display = 'none'; // Hide the button
+            } else {
+                console.error('No suitable back-facing camera found.');
+            }
         } else {
             console.error('No cameras found.');
         }
@@ -107,7 +132,6 @@ document.getElementById('get-started-button').addEventListener('click', async ()
         // Handle the error, e.g., display an error message to the user
     }
 });
-
 
 function initializeDetectionRules() {
   // Initialize DetectionRules based on your predictions logic
