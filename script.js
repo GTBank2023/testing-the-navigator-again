@@ -3,15 +3,15 @@ let cocoSsdModel; // Declare cocoSsdModel as a global variable
 let detectedAreas;  // Initialize the variable
 let predictions;  // Initialize the predictions variable at a global scope
 
-const container = document.getElementById('camera-feed-container');
+const container = document.getElementById('-feed-container');
 
 // Event listener to start the system when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     const getStartedButton = document.querySelector('.get-started-button');
 
     getStartedButton.addEventListener('click', () => {
-        console.log('Button clicked. Requesting camera access...');
-        requestCameraAccess();  // Add this function to handle camera access
+        console.log('Button clicked. Requesting  access...');
+        requestAccess();  // Add this function to handle  access
     });
 });
 
@@ -76,37 +76,37 @@ async function loadCocoSsdModel() {
 
 document.getElementById('get-started-button').addEventListener('click', async () => {
     try {
-        const container = document.getElementById('camera-feed-container');
+        const container = document.getElementById('-feed-container');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
 
         if (videoDevices.length > 0) {
-            // Choose the back camera as the default option
+            // Choose the back  as the default option
             let videoDevice = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 
             if (!videoDevice) {
-                console.error('No back camera found. Using the default camera.');
+                console.error('No back  found. Using the default .');
                 videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
             }
 
             const devices = await navigator.mediaDevices.enumerateDevices();
-            let selectedCamera = null;
+            let selected = null;
 
-            // Iterate through the devices and select the desired camera
+            // Iterate through the devices and select the desired 
             for (const device of devices) {
                 if (device.kind === 'videoinput') {
                     if (device.label.toLowerCase().includes('back')) {
-                        // Found a back-facing camera
-                        selectedCamera = device;
+                        // Found a back-facing 
+                        selected = device;
                         break;
                     }
                 }
             }
 
-            if (selectedCamera) {
+            if (selected) {
                 const constraints = {
                     audio: false,
                     video: {
-                        deviceId: { exact: selectedCamera.deviceId },
+                        deviceId: { exact: selected.deviceId },
                         width: { min: 640, ideal: 1280, max: 1920 },
                         height: { min: 480, ideal: 720, max: 1080 },
                         facingMode: 'environment',
@@ -119,16 +119,16 @@ document.getElementById('get-started-button').addEventListener('click', async ()
                 videoElement.srcObject = stream;
                 videoElement.style.display = 'block'; // Show the video element
                 videoElement.autoplay = true;
-                setupCamera();
+                setup();
                 document.getElementById('get-started-button').style.display = 'none'; // Hide the button
             } else {
-                console.error('No suitable back-facing camera found.');
+                console.error('No suitable back-facing  found.');
             }
         } else {
-            console.error('No cameras found.');
+            console.error('No s found.');
         }
     } catch (error) {
-        console.error('Error accessing the camera:', error);
+        console.error('Error accessing the :', error);
         // Handle the error, e.g., display an error message to the user
     }
 });
