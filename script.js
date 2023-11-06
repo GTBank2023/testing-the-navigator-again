@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Define videoElement
+console.log('Video loaded event fired');
 const videoElement = document.getElementById('video-feed');
 console.log('Video feed is showing');
 
@@ -76,37 +77,39 @@ async function loadCocoSsdModel() {
 
 document.getElementById('get-started-button').addEventListener('click', async () => {
     try {
-        const container = document.getElementById('-feed-container');
+        console.log('Get Started Button Clicked. Requesting camera access...');
+        const container = document.getElementById('camera-feed-container');
+        console.log('Accessing media devices...');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
 
         if (videoDevices.length > 0) {
-            // Choose the back  as the default option
+            console.log('Video devices found. Choosing the back camera as the default option...');
             let videoDevice = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 
             if (!videoDevice) {
-                console.error('No back  found. Using the default .');
+                console.error('No back camera found. Using the default camera.');
                 videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
             }
 
             const devices = await navigator.mediaDevices.enumerateDevices();
-            let selected = null;
+            let selectedCamera = null;
 
-            // Iterate through the devices and select the desired 
             for (const device of devices) {
                 if (device.kind === 'videoinput') {
                     if (device.label.toLowerCase().includes('back')) {
-                        // Found a back-facing 
-                        selected = device;
+                        console.log('Found a back-facing camera.');
+                        selectedCamera = device;
                         break;
                     }
                 }
             }
 
-            if (selected) {
+            if (selectedCamera) {
+                console.log('Selected camera:', selectedCamera);
                 const constraints = {
                     audio: false,
                     video: {
-                        deviceId: { exact: selected.deviceId },
+                        deviceId: { exact: selectedCamera.deviceId },
                         width: { min: 640, ideal: 1280, max: 1920 },
                         height: { min: 480, ideal: 720, max: 1080 },
                         facingMode: 'environment',
@@ -114,7 +117,7 @@ document.getElementById('get-started-button').addEventListener('click', async ()
                 };
 
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                // Create the video element and set its display style to "block"
+                console.log('Access to camera granted. Creating video element...');
                 const videoElement = document.getElementById('video-feed');
                 videoElement.srcObject = stream;
                 videoElement.style.display = 'block'; // Show the video element
@@ -122,13 +125,13 @@ document.getElementById('get-started-button').addEventListener('click', async ()
                 setup();
                 document.getElementById('get-started-button').style.display = 'none'; // Hide the button
             } else {
-                console.error('No suitable back-facing  found.');
+                console.error('No suitable back-facing camera found.');
             }
         } else {
-            console.error('No s found.');
+            console.error('No video devices found.');
         }
     } catch (error) {
-        console.error('Error accessing the :', error);
+        console.error('Error accessing the camera:', error);
         // Handle the error, e.g., display an error message to the user
     }
 });
@@ -503,6 +506,7 @@ console.log('Handling of the areas detected');
 
 
 async function detectObjects() {
+console.log('detectObjects function called');
 const canvas = document.getElementById('CanvasId');
   const ctx = canvas.getContext('2d'); // Define ctx here
 
@@ -575,6 +579,7 @@ fetch('https://raw.githubusercontent.com/GTBank2023/navigatorI/main/marker_data%
   });
 
 console.log('Commence the Detection'); 
+console.log('startDetection function called');
 function startDetection() {
   // Ensure videoElement is defined and ready
   if (!videoElement) {
@@ -593,6 +598,8 @@ console.log('Commence the Object detection as video plays');
 // Event listener to start detection when video is loaded
 console.log('Begin Detection when the video is loaded'); 
 videoElement.addEventListener("loadeddata", startDetection);
+console.log('Loaded data event for video');
+
 
 // Function to perform text-to-speech
 console.log('Read Messages Aloud using Text To Speech');
