@@ -73,24 +73,18 @@ async function loadCocoSsdModel() {
 
 //loadCocoSsdModel(); // Call the async function to load the Coco-SSD model
 
-// Existing code block
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const container = document.getElementById('camera-feed-container');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
 
         if (videoDevices.length > 0) {
-            // Choose the back camera as the default option
-            let videoDevice = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+            // Find the back camera by checking if the device's label contains "back"
+            const backCamera = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 
-            if (!videoDevice) {
-                console.error('No back camera found. Using the default camera.');
-                videoDevice = videoDevices.find((device) => device.kind === 'videoinput');
-            }
-
-            if (videoDevice) {
-                console.log('Accessing the camera...');
-                let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId } });
+            if (backCamera) {
+                console.log('Accessing the back camera...');
+                let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: backCamera.deviceId } });
 
                 // Create the video element and set its display style to "block"
                 const videoElement = document.createElement('video');
@@ -105,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setupCamera();
                 document.getElementById('get-started-button').style.display = 'none'; // Hide the button
             } else {
-                console.error('No suitable back-facing camera found.');
+                console.error('No back camera found.');
             }
         } else {
             console.error('No cameras found.');
