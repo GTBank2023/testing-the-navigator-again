@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/// Define videoElement
+// Define videoElement
 const videoElement = document.getElementById('video-feed');
 console.log('Video feed is showing');
 
