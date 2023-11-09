@@ -5,6 +5,24 @@ let predictions;  // Initialize the predictions variable at a global scope
 
 const container = document.getElementById('camera-feed-container');
 
+// Function to request camera access
+async function requestCameraAccess() {
+    try {
+        // Use the standard getUserMedia API to request camera access
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+        // Handle successful camera access
+        console.log('Camera access granted!');
+
+        // Now, you can proceed with the logic you want to execute after getting camera access
+        // For example, you can display the video feed, start object detection, etc.
+
+    } catch (error) {
+        // Handle errors, e.g., display an error message to the user
+        console.error('Error accessing the camera:', error);
+    }
+}
+
 // Event listener to start the system when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     const getStartedButton = document.querySelector('.get-started-button');
