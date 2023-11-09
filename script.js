@@ -105,13 +105,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: backCamera.deviceId } });
 
                 // Create the video element and set its display style to "block"
-                const videoElement = document.createElement('video');
-                videoElement.id = 'video-feed';
-                videoElement.style.width = '100%';
-                videoElement.style.height = '100%';
-                videoElement.style.display = 'block'; // Show the video element
-                videoElement.autoplay = true;
-                container.appendChild(videoElement);
+              const videoElement = document.getElementById('video-feed');
+
                 videoElement.srcObject = stream;
                 videoElement.parentNode.style.display = 'block'; // Show the container
                 setupCamera();
