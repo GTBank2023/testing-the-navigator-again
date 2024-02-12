@@ -5,15 +5,27 @@ let predictions;  // Initialize the predictions variable at a global scope
 
 const container = document.getElementById('camera-feed-container');
 
-// Event listener to start the system when the DOM is fully loaded
+// Event listener for the "Get Started" button click
 document.addEventListener('DOMContentLoaded', () => {
     const getStartedButton = document.querySelector('.get-started-button');
 
     getStartedButton.addEventListener('click', () => {
-        console.log('Button clicked. Requesting camera access...');
-        requestCameraAccess();  // Add this function to handle camera access
+        requestCameraAccess();  // Request camera access when the button is clicked
     });
 });
+
+// Function to request camera access
+async function requestCameraAccess() {
+    try {
+        // Code to access the camera
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        // Code to handle the camera stream
+    } catch (error) {
+        console.error('Error accessing the camera:', error);
+        // Code to handle errors
+    }
+}
+
 
 /// Define videoElement
 const videoElement = document.getElementById('video-feed');
