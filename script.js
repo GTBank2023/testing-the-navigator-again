@@ -5,27 +5,15 @@ let predictions;  // Initialize the predictions variable at a global scope
 
 const container = document.getElementById('camera-feed-container');
 
-// Event listener for the "Get Started" button click
+// Event listener to start the system when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     const getStartedButton = document.querySelector('.get-started-button');
 
     getStartedButton.addEventListener('click', () => {
-        requestCameraAccess();  // Request camera access when the button is clicked
+        console.log('Button clicked. Requesting camera access...');
+        requestCameraAccess();  // Add this function to handle camera access
     });
 });
-
-// Function to request camera access
-async function requestCameraAccess() {
-    try {
-        // Code to access the camera
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        // Code to handle the camera stream
-    } catch (error) {
-        console.error('Error accessing the camera:', error);
-        // Code to handle errors
-    }
-}
-
 
 /// Define videoElement
 const videoElement = document.getElementById('video-feed');
@@ -85,8 +73,8 @@ async function loadCocoSsdModel() {
 
 //loadCocoSsdModel(); // Call the async function to load the Coco-SSD model
 
-// Adjust camera initialization logic
-document.addEventListener('DOMContentLoaded', async () => {
+// Existing code block
+document.getElementById('get-started-button').addEventListener('click', async () => {
     try {
         const container = document.getElementById('camera-feed-container');
         const videoDevices = await navigator.mediaDevices.enumerateDevices();
@@ -99,11 +87,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.error('No video devices found.');
             } else {
                 console.log('Accessing the camera...');
-                let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId, facingMode: 'environment' } });
+                let stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevice.deviceId } });
 
                 // Create the video element and set its display style to "block"
-                const videoElement = document.createElement('video');
-                videoElement.id = 'video-feed';
+               const videoElement = document.createElement('video');
+               videoElement.id = 'video-feed';
                 videoElement.style.width = '100%';
                 videoElement.style.height = '100%';
                 videoElement.style.display = 'block'; // Show the video element
@@ -112,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 videoElement.srcObject = stream;
                 videoElement.parentNode.style.display = 'block'; // Show the container
                 setupCamera();
-                document.getElementById('get-started-button').style.display = 'block'; // Show the button
+                document.getElementById('get-started-button').style.display = 'none'; // Hide the button
             }
         } else {
             console.error('No cameras found.');
@@ -123,12 +111,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Keep camera activation tied to button click event
-const getStartedButton = document.querySelector('.get-started-button');
-getStartedButton.addEventListener('click', () => {
-    console.log('Button clicked. Requesting camera access...');
-    requestCameraAccess();  // Add this function to handle camera access
+const frontCameraButton = document.getElementById('switch-to-front-camera');
+const backCameraButton = document.getElementById('switch-to-back-camera');
+
+frontCameraButton.addEventListener('click', async () => {
+    try {
+        const videoDevices = await navigator.mediaDevices.enumerateDevices();
+        const frontCamera = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('front'));
+        
+        if (frontCamera) {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: frontCamera.deviceId } });
+            videoElement.srcObject = stream;
+        } else {
+            console.error('No front camera found for switching.');
+        }
+    } catch (error) {
+        console.error('Error switching to front camera:', error);
+    }
 });
+
+backCameraButton.addEventListener('click', async () => {
+    try {
+        const videoDevices = await navigator.mediaDevices.enumerateDevices();
+        const backCamera = videoDevices.find((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+        
+        if (backCamera) {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: backCamera.deviceId } });
+            videoElement.srcObject = stream;
+        } else {
+            console.error('No back camera found for switching.');
+        }
+    } catch (error) {
+        console.error('Error switching to back camera:', error);
+    }
+});
+
 
 function initializeDetectionRules() {
   // Initialize DetectionRules based on your predictions logic
