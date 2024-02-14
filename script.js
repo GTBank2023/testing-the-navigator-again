@@ -26,7 +26,6 @@ async function requestCameraAccess() {
     }
 }
 
-
 /// Define videoElement
 const videoElement = document.getElementById('video-feed');
 console.log('Video feed is showing');
