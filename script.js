@@ -5,7 +5,7 @@ let predictions;  // Initialize the predictions variable at a global scope
 
 const container = document.getElementById('camera-feed-container');
 
-// Event listener to start the system when the DOM is fully loaded
+// Event listener for the "Get Started" button click
 document.addEventListener('DOMContentLoaded', () => {
     const getStartedButton = document.querySelector('.get-started-button');
 
@@ -25,6 +25,7 @@ async function requestCameraAccess() {
         // Code to handle errors
     }
 }
+
 
 /// Define videoElement
 const videoElement = document.getElementById('video-feed');
